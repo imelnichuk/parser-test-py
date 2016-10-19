@@ -3,3 +3,15 @@
     height      : 500px;
     font-size   : 11px;
 }
+
+.red-star {
+    color: red;
+}
+.text-success {
+    color: green;
+    font-style: italic;
+}
+.text-json-error {
+    color: red;
+    font-style: italic;
+}

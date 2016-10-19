@@ -59,6 +59,28 @@ function generate_chart(region_id) {
 </script>
 
 
+<form enctype="multipart/form-data" method="post" action="/graph/"> {% csrf_token %}
+  <br>Выберите файл для загрузки новых значений в базу данных:<br>
+  <span class="red-star">*</span>
+  <i>Данные в файле должны быть в формате JSON</i><br><br>
+
+  {{ form }}
+
+  <input type="submit" value="Upload">
+
+  {% if is_uploaded %}
+    <span class="text-success">
+      <br><br>База данных успешно обновлена данными из файла.
+    </span>
+  {% elif error and error == 'json-error' %}
+    <span class="text-{{ error }}">
+      <br><br>Ошибка: данные в файле должны быть в формате JSON.
+    </span>
+  {% endif %}
+
+</form>
+<hr>
+
 {% if regions_list %}
 <br><div>Выберите регион:</div><br>
 <div>
@@ -80,3 +102,4 @@ function generate_chart(region_id) {
 
 
 <div id="chartdiv"></div>
+
