@@ -1,0 +1,82 @@
+
+{% load static %}
+
+<script src="{% static 'js/jquery-3.1.1.slim.min.js' %}"></script>
+
+<script src="{% static 'js/amchart/amcharts.js' %}"></script>
+<script src="{% static 'js/amchart/serial.js' %}"></script>
+<script src="{% static 'js/amchart/themes/light.js' %}"></script>
+<script src="{% static 'js/amchart/export.min.js' %}"></script>
+<script src="{% static 'js/amchart/dataloader.min.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'css/amchart/style.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'css/amchart/export.css' %}" type="text/css" media="all" />
+<link rel="stylesheet" href="{% static 'css/graph.css' %}" type="text/css">
+
+<script>
+function generate_chart(region_id) {
+
+    var chart = AmCharts.makeChart( "chartdiv", {
+      "type": "serial",
+      "dataLoader": {
+        "url": region_id,
+        "format": "json"
+       },
+      "theme": "light",
+      "valueAxes": [ {
+        "gridColor": "#FFFFFF",
+        "gridAlpha": 0.2,
+        "dashLength": 0
+      } ],
+      "gridAboveGraphs": true,
+      "startDuration": 1,
+      "graphs": [ {
+        "balloonText": "[[category]]: <b>[[value]]</b>",
+        "fillAlphas": 0.8,
+        "lineAlpha": 0.2,
+        "type": "column",
+        "valueField": "value"
+      } ],
+      "chartCursor": {
+        "categoryBalloonEnabled": false,
+        "cursorAlpha": 0,
+        "zoomable": false
+      },
+      "categoryField": "country",
+      "categoryAxis": {
+        "gridPosition": "start",
+        "gridAlpha": 0,
+        "tickPosition": "start",
+        "tickLength": 20,
+        "labelRotation": 45
+      },
+      "export": {
+        "enabled": true
+      }
+
+    } );
+}
+</script>
+
+
+{% if regions_list %}
+<br><div>Выберите регион:</div><br>
+<div>
+
+<select id="regions_list" onchange="generate_chart($('#regions_list option:selected').val())">
+    <option value=0>-</option>
+
+    {% for region in regions_list %}
+        <option value="{{ region.region_id }}">{{ region.name }}</option>
+    {% endfor %}
+
+</select>
+
+{% else %}
+    <p>Нет доступных регионов.</p>
+{% endif %}
+</div>
+<br>
+
+
+<div id="chartdiv"></div>
