@@ -60,7 +60,7 @@ def update_regions(db, regions_keys):
     regions_ids = {}
 
     cursor = db.cursor()
-    sql_select = '''SELECT id FROM regions WHERE name = %s;'''
+    sql_select = '''SELECT region_id FROM dcodgraph_regions WHERE name = %s;'''
 
     for region in sorted(regions):
 
@@ -70,7 +70,7 @@ def update_regions(db, regions_keys):
         if region_id:
             region_id = region_id[0]
         else:
-            sql = '''INSERT INTO regions (name) VALUES (%s);'''
+            sql = '''INSERT INTO dcodgraph_regions (name) VALUES (%s);'''
             run_db_statement(db, cursor, sql, (region,))
             region_id = cursor.lastrowid
 
@@ -89,7 +89,7 @@ def update_countries_values(db, data, regions_ids):
 
     for region, counties_values in data.items():
         region_id = regions_ids[region]
-        sql_select = '''SELECT value FROM countries_values
+        sql_select = '''SELECT value FROM dcodgraph_countriesvalues
                         WHERE country = %s AND region_id = %s;'''
 
         for country, new_value in counties_values:
@@ -99,13 +99,13 @@ def update_countries_values(db, data, regions_ids):
 
             if not db_value:
 
-                sql = '''INSERT INTO countries_values
+                sql = '''INSERT INTO dcodgraph_countriesvalues
                                 (region_id, country, value) VALUES (%s, %s, %s);'''
                 run_db_statement(db, cursor, sql, (region_id, country, new_value))
 
             elif float(db_value[0]) != float(new_value):
 
-                sql = '''UPDATE countries_values SET value = %s
+                sql = '''UPDATE dcodgraph_countriesvalues SET value = %s
                                 WHERE country = %s AND region_id = %s;'''
                 run_db_statement(db, cursor, sql, (new_value, country, region_id))
 
